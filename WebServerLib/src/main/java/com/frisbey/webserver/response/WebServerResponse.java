@@ -165,10 +165,9 @@ public class WebServerResponse {
             try {
                 stream = getUriInputStream(this.bodyUri);
 
-                BufferedReader reader = StreamUtils.getStreamReader(stream);
                 int currByte = 0;
 
-                while ((currByte = reader.read()) != -1) {
+                while ((currByte = stream.read()) != -1) {
                     output.write(currByte);
                 }
             } catch (Exception ex) {
@@ -190,7 +189,7 @@ public class WebServerResponse {
      * @throws IOException thrown if there are issues initializing the stream.
      */
     protected InputStream getUriInputStream(String uri) throws IOException {
-        return new FileInputStream(uri);
+        return new BufferedInputStream(new FileInputStream(uri));
     }
 
     /**

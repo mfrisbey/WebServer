@@ -16,6 +16,7 @@
 
 package com.frisbey.webserver.request;
 
+import com.frisbey.webserver.HttpContentType;
 import com.frisbey.webserver.HttpMethod;
 import com.frisbey.webserver.HttpResponse;
 import com.frisbey.webserver.HttpVersion;
@@ -66,6 +67,7 @@ public class HeadRequest extends WebServerRequest {
         header.setValue("Connection", "close");
         header.setValue("Server", "AemWebServer");
         header.setValue("Content-Length", Long.toString(getContentLength()));
+        header.setValue("Content-Type", HttpContentType.fromFilePath(this.getUri()).getContentType());
 
         HttpResponse response = getHttpResponse();
 

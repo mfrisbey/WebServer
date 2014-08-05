@@ -18,7 +18,7 @@ package com.frisbey.webserver;
 
 /**
  * Represents valid HTTP methods. The enumeration can be easily extended to support additional method types. A method
- * consists a string description.
+ * consists of a string description.
  *
  * @author Mark Frisbey
  */
