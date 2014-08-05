@@ -63,7 +63,7 @@ public enum HttpContentType {
         if (!StringUtils.isNullOrEmpty(filePath)) {
             for (HttpContentType t : HttpContentType.values()) {
                 for (String extension : t.extensions) {
-                    if (filePath.length() >= extension.length() && filePath.substring(filePath.length() - extension.length()).compareTo(extension) == 0) {
+                    if (filePath.length() >= extension.length() && filePath.substring(filePath.length() - extension.length()).compareToIgnoreCase(extension) == 0) {
                         finalContent = t;
                         break;
                     }
