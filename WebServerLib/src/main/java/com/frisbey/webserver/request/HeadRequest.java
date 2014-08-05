@@ -63,14 +63,26 @@ public class HeadRequest extends WebServerRequest {
         logger.debug("entering");
 
         WebServerHeader header = new WebServerHeader();
-        header.setValue("Server", "AemWebServer");
-        header.setValue("Content-Length", "0");
         header.setValue("Connection", "close");
+        header.setValue("Server", "AemWebServer");
+        header.setValue("Content-Length", Long.toString(getContentLength()));
 
         HttpResponse response = getHttpResponse();
 
         logger.debug("returning response with status {}", response.getText());
 
+        return createResponse(HttpVersion.HTTP_1_1, response, header);
+    }
+
+    /**
+     * Initializes the response that the request will return.
+     *
+     * @param version The HTTP version that will be provided with the response.
+     * @param response The HTTP response that will be included with the response.
+     * @param header Header values that will be included in the response.
+     * @return An initialized WebServerResponse instance.
+     */
+    protected WebServerResponse createResponse(HttpVersion version, HttpResponse response, WebServerHeader header) {
         return new WebServerResponse(HttpVersion.HTTP_1_1, response, header);
     }
 
@@ -93,36 +105,13 @@ public class HeadRequest extends WebServerRequest {
     }
 
     /**
-     * Retrieves the file in the location specified by the given uri.
+     * Retrieves the content length of the response that will be sent.
      *
-     * @param uri The URI of the file to be retrieved.
-     * @return The file at the given location.
+     * @return The length (in bytes) of the response's body.
      */
-    protected File getUriFile(String uri) {
-        return new File(uri);
-    }
+    protected long getContentLength() {
+        File file = new File(this.getUri());
 
-    /**
-     * Retrieves an input stream to a URI resource.
-     *
-     * @param uri The URI to which a stream should be opened.
-     * @return An input stream to a URI.
-     * @throws InvalidRequestException thrown if the URI could not be found.
-     */
-    protected InputStream getBodyInput(String uri) throws InvalidRequestException {
-        logger.debug("entering with uri={}", uri);
-
-        InputStream stream = null;
-
-        try {
-            stream = new FileInputStream(uri);
-        } catch (FileNotFoundException ex) {
-            logger.warn("exception due to file that does not exist: {}", uri);
-            throw new InvalidRequestException("Unable to create response due to invalid URI GET request", ex);
-        }
-
-        logger.debug("leaving with stream {}", stream);
-
-        return stream;
+        return file.length();
     }
 }

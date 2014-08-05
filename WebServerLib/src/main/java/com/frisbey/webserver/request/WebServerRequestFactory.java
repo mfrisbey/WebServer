@@ -80,6 +80,8 @@ public class WebServerRequestFactory {
         String uri = StringUtils.buildPath(webServerRoot, requestData[1]);
         String rawVersion = requestData[2];
 
+        logger.debug("Received URI value of {} from raw request, converted to local path {}", requestData[1], uri);
+
         // retrieve the header of the request
         try {
             while ((inputLine = inputReader.readLine()) != null && inputLine.length() > 0) {

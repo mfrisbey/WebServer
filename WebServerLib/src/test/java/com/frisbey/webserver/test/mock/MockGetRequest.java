@@ -22,6 +22,7 @@ import com.frisbey.webserver.HttpVersion;
 import com.frisbey.webserver.exception.InvalidRequestException;
 import com.frisbey.webserver.request.GetRequest;
 import com.frisbey.webserver.request.WebServerHeader;
+import com.frisbey.webserver.response.WebServerResponse;
 import com.frisbey.webserver.utility.StreamUtils;
 
 import java.io.InputStream;
@@ -45,18 +46,6 @@ public class MockGetRequest extends GetRequest {
     }
 
     /**
-     * Overridden so that a local file does not need to exist for unit tests.
-     *
-     * @param uri The URI to which a stream should be opened.
-     * @return An input stream to a byte array.
-     * @throws InvalidRequestException thrown if toggled in the mock object.
-     */
-    @Override
-    protected InputStream getBodyInput(String uri) throws InvalidRequestException {
-        return StreamUtils.getInputStreamFromString(uri);
-    }
-
-    /**
      * Sets the HTTP response that will be returned by the Mock object.
      *
      * @param response An HTTP response to return.
@@ -73,5 +62,17 @@ public class MockGetRequest extends GetRequest {
     @Override
     protected HttpResponse getHttpResponse() {
         return this.response;
+    }
+
+    /**
+     * Overridden to return a mock response.
+     * @param version The HTTP version that will be provided with the response.
+     * @param response The HTTP response that will be included with the response.
+     * @param header Header values that will be included in the response.
+     * @return A mock version of a web server response.
+     */
+    @Override
+    protected WebServerResponse createResponse(HttpVersion version, HttpResponse response, WebServerHeader header) {
+        return new MockWebServerResponse(version, response, header, null);
     }
 }

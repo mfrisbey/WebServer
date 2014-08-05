@@ -18,9 +18,11 @@ package com.frisbey.webserver.response;
 
 import com.frisbey.webserver.HttpResponse;
 import com.frisbey.webserver.HttpVersion;
+import com.frisbey.webserver.exception.InvalidRequestException;
 import com.frisbey.webserver.request.WebServerHeader;
 import com.frisbey.webserver.request.WebServerRequestFactory;
 import com.frisbey.webserver.utility.StreamUtils;
+import com.frisbey.webserver.utility.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,8 +49,8 @@ public class WebServerResponse {
     // the header that will be returned with the response.
     private WebServerHeader header;
 
-    // a stream to the body associated with the response
-    private InputStream bodyStream;
+    // URI to the body resource that will be associated with the response
+    private String bodyUri;
 
     // the newline sequence that will be used in the response
     protected static final String kResponseNewLine = "\r\n";
@@ -83,13 +85,13 @@ public class WebServerResponse {
      * @param version The HTTP version that will be provided with the response.
      * @param response The HTTP response that will be associated with the response.
      * @param header The header that will be used with the response.
-     * @param body A stream to the body that can be written to an output stream.
+     * @param bodyUri The URI to the resource that will be returned as the body.
      */
-    public WebServerResponse(HttpVersion version, HttpResponse response, WebServerHeader header, InputStream body) {
+    public WebServerResponse(HttpVersion version, HttpResponse response, WebServerHeader header, String bodyUri) {
         this.version = version;
         this.response = response;
         this.header = header;
-        this.bodyStream = body;
+        this.bodyUri = bodyUri;
     }
 
     /**
@@ -155,24 +157,48 @@ public class WebServerResponse {
         output.write(headerResponse.getBytes());
 
         // write the body if supplied
-        if (bodyStream != null) {
-            logger.debug("writing body to output from stream {}", bodyStream);
+        if (!StringUtils.isNullOrEmpty(this.bodyUri)) {
+            logger.debug("writing body to output from uri {}", this.bodyUri);
 
-            BufferedReader reader = StreamUtils.getStreamReader(bodyStream);
-            int currByte = 0;
+            InputStream stream = null;
 
-            while ((currByte = reader.read()) != -1) {
-                output.write(currByte);
+            try {
+                stream = getUriInputStream(this.bodyUri);
+
+                BufferedReader reader = StreamUtils.getStreamReader(stream);
+                int currByte = 0;
+
+                while ((currByte = reader.read()) != -1) {
+                    output.write(currByte);
+                }
+            } catch (Exception ex) {
+                throw new IOException("Unable to retrieve requested URI and write to output", ex);
+            } finally {
+                if (stream != null) {
+                    stream.close();
+                }
             }
         }
     }
 
     /**
+     * Retrieves an input stream to the resource at the given URI. Note that the caller will be responsible for
+     * closing the stream.
+     *
+     * @param uri The location of the resource to retrieve.
+     * @return An input stream to the requested URI.
+     * @throws IOException thrown if there are issues initializing the stream.
+     */
+    protected InputStream getUriInputStream(String uri) throws IOException {
+        return new FileInputStream(uri);
+    }
+
+    /**
      * Sets the stream that the response will use as its body.
      *
-     * @param stream The stream to use as the response's body.
+     * @param uri The URI to the resource that should be used as the response's body.
      */
-    public void setBodyStream(InputStream stream) {
-        this.bodyStream = stream;
+    public void setBodyUri(String uri) {
+        this.bodyUri = uri;
     }
 }

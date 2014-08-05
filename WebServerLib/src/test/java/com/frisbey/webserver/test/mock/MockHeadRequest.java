@@ -21,6 +21,7 @@ import com.frisbey.webserver.HttpResponse;
 import com.frisbey.webserver.HttpVersion;
 import com.frisbey.webserver.request.HeadRequest;
 import com.frisbey.webserver.request.WebServerHeader;
+import com.frisbey.webserver.response.WebServerResponse;
 
 /**
  * A mock version of the HeadRequest. Eliminates the need for files to exist in order for the request to be successful.
@@ -41,5 +42,17 @@ public class MockHeadRequest extends HeadRequest {
      */
     protected HttpResponse getHttpResponse() {
         return HttpResponse.OK;
+    }
+
+    /**
+     * Overridden to return a mock response.
+     * @param version The HTTP version that will be provided with the response.
+     * @param response The HTTP response that will be included with the response.
+     * @param header Header values that will be included in the response.
+     * @return A mock version of a web server response.
+     */
+    @Override
+    protected WebServerResponse createResponse(HttpVersion version, HttpResponse response, WebServerHeader header) {
+        return new MockWebServerResponse(version, response, header, null);
     }
 }

@@ -20,6 +20,7 @@ import com.frisbey.webserver.HttpResponse;
 import com.frisbey.webserver.HttpVersion;
 import com.frisbey.webserver.request.WebServerHeader;
 import com.frisbey.webserver.response.WebServerResponse;
+import com.frisbey.webserver.test.mock.MockWebServerResponse;
 import com.frisbey.webserver.utility.StreamUtils;
 import org.junit.Test;
 
@@ -75,7 +76,7 @@ public class WebServerResponseTest {
         WebServerHeader header = new WebServerHeader();
         header.setValue("Host", "www.adobe.com");
 
-        WebServerResponse response = new WebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.OK, header, StreamUtils.getInputStreamFromString(body));
+        WebServerResponse response = new MockWebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.OK, header, body);
 
         OutputStream output = new ByteArrayOutputStream();
         response.writeResponse(output);
@@ -91,7 +92,7 @@ public class WebServerResponseTest {
     public void writeResponseNoHeaderTest() throws IOException {
         String body = "this is the body";
 
-        WebServerResponse response = new WebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.OK, null, StreamUtils.getInputStreamFromString(body));
+        WebServerResponse response = new MockWebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.OK, null, body);
 
         OutputStream output = new ByteArrayOutputStream();
         response.writeResponse(output);
@@ -108,7 +109,7 @@ public class WebServerResponseTest {
         WebServerHeader header = new WebServerHeader();
         header.setValue("Host", "www.adobe.com");
 
-        WebServerResponse response = new WebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.OK, header);
+        WebServerResponse response = new MockWebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.OK, header, null);
 
         OutputStream output = new ByteArrayOutputStream();
         response.writeResponse(output);
@@ -135,11 +136,11 @@ public class WebServerResponseTest {
      * Verifies the setBodyStream method
      */
     @Test
-    public void setBodyStreamTest() throws IOException {
+    public void setBodyUriTest() throws IOException {
         String body = "this is the body";
 
-        WebServerResponse response = new WebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.OK);
-        response.setBodyStream(StreamUtils.getInputStreamFromString(body));
+        WebServerResponse response = new MockWebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.OK, null, null);
+        response.setBodyUri(body);
 
         OutputStream output = new ByteArrayOutputStream();
         response.writeResponse(output);

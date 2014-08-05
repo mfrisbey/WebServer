@@ -65,8 +65,8 @@ public class GetRequest extends HeadRequest {
         WebServerResponse response = super.getResponse();
 
         if (response.getResponse() == HttpResponse.OK) {
-            logger.debug("HEAD response was OK, attempting to retrieve body");
-            response.setBodyStream(getBodyInput(this.getUri()));
+            logger.debug("HEAD response was OK, setting body to requested UIR {}", this.getUri());
+            response.setBodyUri(this.getUri());
         }
 
         logger.debug("leaving with response {}", response.getResponse().getText());
