@@ -25,10 +25,36 @@ import com.frisbey.webserver.utility.StringUtils;
  * @author Mark Frisbey
  */
 public enum HttpContentType {
+
+    /**
+     * The content is text or html.
+     */
     TEXT_HTML("text/html", new String[] { }),
+
+    /**
+     * The content is a jpeg image.
+     */
     IMAGE_JPEG("image/jpeg", new String[] {".jpg", ".jpeg"}),
+
+    /**
+     * The content is a gif image.
+     */
     IMAGE_GIF("image/gif", new String[] {".gif"}),
-    ZIP_COMPRESSED("application/x-zip-compressed", new String[] {".zip"});
+
+    /**
+     * The content is a compressed zip file.
+     */
+    ZIP_COMPRESSED("application/x-zip-compressed", new String[] {".zip"}),
+
+    /**
+     * The content is a javascript file.
+     */
+    JAVASCRIPT("application/javascript", new String[] {".js"}),
+
+    /**
+     * The content is a css file.
+     */
+    CSS("text/css", new String[] {".css"});
 
     // the content type description
     private String content;

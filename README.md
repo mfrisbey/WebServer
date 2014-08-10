@@ -19,7 +19,7 @@ For detailed usage information, see the help message displayed when attempting t
 parameters. For convenience, the jar is an "uber" jar that contains all dependent jars. A couple of ways to run the
 jar are:
 
-1. From a command line, execute the command `java -cp [path/to/jar/directory] com.frisbey.webserverprocess.WebServerExecutor`
+1. From a command line, execute the command `java -cp [path/to/jar/directory]/* com.frisbey.webserverprocess.WebServerExecutor`
 
 2. From a command line, change directories to the same location as the jar and execute the command 
 `java com.frisbey.webserverprocess.WebServerExecutor`.

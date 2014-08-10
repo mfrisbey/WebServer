@@ -32,7 +32,13 @@ public enum HttpResponse {
     /**
      * A Not Found response, meaning that the web server was unable to locate the URI in the request.
      */
-    NotFound(404, "Not Found");
+    NotFound(404, "Not Found"),
+
+    /**
+     * An internal server error response, meaning that the web server encountered an error and was unable to
+     * process the request.
+     */
+    InternalServerError(500, "Internal Server Error");
 
     // the code portion of the response
     private int code;

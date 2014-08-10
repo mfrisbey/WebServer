@@ -77,7 +77,7 @@ public class WebServerRequestFactory {
 
         // retrieve the HTTP method from the header
         String rawMethod = requestData[0];
-        String uri = StringUtils.buildPath(webServerRoot, requestData[1]);
+        String uri = StringUtils.buildPath(webServerRoot, StringUtils.trimQueryString(requestData[1]));
         String rawVersion = requestData[2];
 
         logger.debug("Received URI value of {} from raw request, converted to local path {}", requestData[1], uri);
@@ -100,14 +100,25 @@ public class WebServerRequestFactory {
         HttpMethod method = HttpMethod.fromString(rawMethod);
         HttpVersion version = HttpVersion.fromString(rawVersion);
 
-        switch (method) {
-            case GET:
-                request = new GetRequest(HttpMethod.GET, uri, version, header);
-                logger.info("client request interpreted as GET");
-                break;
-            default:
-                logger.warn("exception due to unhandled method");
-                throw new InvalidRequestException("Invalid request: unhandled method "+method);
+        if (version == null) {
+            logger.warn("exception due to unrecognized http version {}", rawVersion);
+            throw new InvalidRequestException("Invalid request: unrecognized HTTP Version: "+rawVersion);
+        }
+
+        if (method != null) {
+            switch (method) {
+                case GET:
+                    request = new GetRequest(HttpMethod.GET, uri, version, header);
+                    logger.info("client request interpreted as GET");
+                    break;
+                default:
+                    method = null;
+            }
+        }
+
+        if (method == null) {
+            logger.warn("exception due to unhandled method {}", rawMethod);
+            throw new InvalidRequestException("Invalid request: unhandled method " + rawMethod);
         }
 
         logger.debug("leaving: {}", request);

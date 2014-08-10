@@ -74,17 +74,22 @@ public class RequestThread implements Runnable {
         WebServerResponse response = null;
         try {
             // grab streams from the socket
-            InputStream input = clientSocket.getInputStream();
-            OutputStream output = clientSocket.getOutputStream();
+            InputStream input = input = clientSocket.getInputStream();
+            OutputStream output = output = clientSocket.getOutputStream();
 
-            // interpret the request and generate a response
-            WebServerRequest request = getRequest(input, this.webServerRoot);
-            response = request.getResponse();
+            try {
+                // interpret the request and generate a response
+                WebServerRequest request = getRequest(input, this.webServerRoot);
+                response = request.getResponse();
+            } catch (Exception ex) {
+                logger.error("There was an unhandled exception while processing the request and an internal server error response is being sent.", ex);
+                response = new WebServerResponse(HttpVersion.HTTP_1_0, HttpResponse.InternalServerError);
+            }
 
             // write the response back to the socket
             response.writeResponse(output);
         } catch (Exception ex) {
-            logger.error("exception when processing request", ex);
+            logger.error("something went REALLY wrong and the server was unable to send any request.", ex);
         } finally {
             // close the socket when finished
             try {

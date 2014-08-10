@@ -85,7 +85,7 @@ public class HeadRequest extends WebServerRequest {
      * @return An initialized WebServerResponse instance.
      */
     protected WebServerResponse createResponse(HttpVersion version, HttpResponse response, WebServerHeader header) {
-        return new WebServerResponse(HttpVersion.HTTP_1_1, response, header);
+        return new WebServerResponse(version, response, header);
     }
 
     /**

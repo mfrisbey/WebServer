@@ -50,4 +50,10 @@ public class StringUtilsTest {
         assertEquals("Unexpected result from initial value ending with slash", "/dir1/dir2", StringUtils.buildPath("/dir1\\", "dir2"));
         assertEquals("Unexpected result from initial value ending with slash AND subsequent value beginning with slash", "/dir1/dir2/", StringUtils.buildPath("/dir1/", "/dir2\\"));
     }
+
+    @Test
+    public void trimQueryStringTest() {
+        assertEquals("Unexpected result from string with query string", "/file1.html", StringUtils.trimQueryString("/file1.html?id=10"));
+        assertEquals("Unexpected result from string without query string", "/file1.html", StringUtils.trimQueryString("/file1.html"));
+    }
 }
