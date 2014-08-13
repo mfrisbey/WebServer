@@ -117,7 +117,7 @@ author. Here are some highlights worth mentioning:
 * Maven Usage
     * The project uses Maven for simple compilation and resolution of dependencies.
     * The server is packaged into a single uber jar for convenient execution.
-    * Development modules are versioned using Maven's SNAPSHOT convention, whereas releases are versioned with 
+    * Development modules are versioned using Maven's SNAPSHOT convention, whereas releases are versioned without 
     SNAPSHOTS.
     * Modules are versioned independently from one another. For example, WebServerLib maintains its own version number
     that is only updated when changes are made to the module.
