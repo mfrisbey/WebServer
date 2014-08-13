@@ -13,7 +13,7 @@ concerted effort would have been made to avoid "reinventing the wheel."
 
 # Usage
 The repository includes pre-compiled jars called WebServerProcess-[version].jar. These jars were built using Maven 3.1.1 
-on a Windows 7 environment using JDK 1.7. They have been verified to run correctly with JRE 7.0.
+on Cygwin in a Windows 7 environment using JDK 1.7. They have been verified to run correctly with JRE 7.0.
 
 For detailed usage information, see the help message displayed when attempting to execute the jar without
 parameters. For convenience, the jar is an "uber" jar that contains all dependent jars. To run the jar:
