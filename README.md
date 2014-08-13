@@ -108,7 +108,7 @@ author. Here are some highlights worth mentioning:
         * Certain objects make use of object inheritance to alter the behavior and dependencies of key methods.
 * Documentation
     * Documentation for how to use the solution is made available via GitHub.
-    * Javadoc comments are exported to html and hosted on GitHub as part of the build process.
+    * Javadoc comments could be exported to html and hosted on GitHub as part of the build process.
 * Git Usage
     * The source code is housed in a Git repository.
     * Development of the solution was done using Git Flow. All new development was done on the develop branch or on 
@@ -117,3 +117,7 @@ author. Here are some highlights worth mentioning:
 * Maven Usage
     * The project uses Maven for simple compilation and resolution of dependencies.
     * The server is packaged into a single uber jar for convenient execution.
+    * Development modules are versioned using Maven's SNAPSHOT convention, whereas releases are versioned with 
+    SNAPSHOTS.
+    * Modules are versioned independently from one another. For example, WebServerLib maintains its own version number
+    that is only updated when changes are made to the module.
