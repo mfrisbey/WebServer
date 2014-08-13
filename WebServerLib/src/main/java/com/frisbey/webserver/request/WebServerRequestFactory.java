@@ -17,9 +17,12 @@
 package com.frisbey.webserver.request;
 
 import com.frisbey.webserver.HttpMethod;
+import com.frisbey.webserver.HttpResponse;
 import com.frisbey.webserver.HttpVersion;
 import com.frisbey.webserver.exception.InvalidHeaderException;
+import com.frisbey.webserver.exception.InvalidMethodException;
 import com.frisbey.webserver.exception.InvalidRequestException;
+import com.frisbey.webserver.response.WebServerResponse;
 import com.frisbey.webserver.utility.StreamUtils;
 import com.frisbey.webserver.utility.StringUtils;
 import org.slf4j.Logger;
@@ -108,9 +111,12 @@ public class WebServerRequestFactory {
         if (method != null) {
             switch (method) {
                 case GET:
-                    request = new GetRequest(HttpMethod.GET, uri, version, header);
+                    request = new GetRequest(method, uri, version, header);
                     logger.info("client request interpreted as GET");
                     break;
+                case HEAD:
+                    request = new HeadRequest(method, uri, version, header);
+                    logger.info("client request interpreted as HEAD");
                 default:
                     method = null;
             }
@@ -118,7 +124,7 @@ public class WebServerRequestFactory {
 
         if (method == null) {
             logger.warn("exception due to unhandled method {}", rawMethod);
-            throw new InvalidRequestException("Invalid request: unhandled method " + rawMethod);
+            throw new InvalidMethodException("Invalid method: " + rawMethod);
         }
 
         logger.debug("leaving: {}", request);

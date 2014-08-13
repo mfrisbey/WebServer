@@ -42,6 +42,11 @@ public enum HttpContentType {
     IMAGE_GIF("image/gif", new String[] {".gif"}),
 
     /**
+     * The content is a png image.
+     */
+    IMAGE_PNG("image/png", new String[] {".png"}),
+
+    /**
      * The content is a compressed zip file.
      */
     ZIP_COMPRESSED("application/x-zip-compressed", new String[] {".zip"}),
