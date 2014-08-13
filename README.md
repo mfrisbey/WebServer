@@ -16,13 +16,9 @@ The repository includes pre-compiled jars called WebServerProcess-[version].jar.
 on a Windows 7 environment using JDK 1.7. They have been verified to run correctly with JRE 7.0.
 
 For detailed usage information, see the help message displayed when attempting to execute the jar without
-parameters. For convenience, the jar is an "uber" jar that contains all dependent jars. A couple of ways to run the
-jar are:
+parameters. For convenience, the jar is an "uber" jar that contains all dependent jars. To run the jar:
 
-1. From a command line, execute the command `java -cp [path/to/jar/directory]/* com.frisbey.webserverprocess.WebServerExecutor`
-
-2. From a command line, change directories to the same location as the jar and execute the command 
-`java com.frisbey.webserverprocess.WebServerExecutor`.
+From a command line, execute the command `java -jar [path/to/webserverprocess/jar]`
 
 ## Building
 The following dependencies are required in order to build the source code:
@@ -117,7 +113,7 @@ author. Here are some highlights worth mentioning:
     * The source code is housed in a Git repository.
     * Development of the solution was done using Git Flow. All new development was done on the develop branch or on 
     feature branches. Release branches were created whenever a new release of the server was cut. Hotfixes can be done
-    on release branches. All branches created during the development cycle are available in the repository on GitHub.
+    from the master branch. All branches created during the development cycle are available in the repository on GitHub.
 * Maven Usage
     * The project uses Maven for simple compilation and resolution of dependencies.
     * The server is packaged into a single uber jar for convenient execution.
