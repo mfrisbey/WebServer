@@ -123,6 +123,17 @@ public class WebServerResponse {
     }
 
     /**
+     * Sets the value of a header value in the response. If the key already exists, the value will be overwritten. If
+     * the key doesn't exist, then its value will be added.
+     *
+     * @param key The header key whose value should be set.
+     * @param value The value that will be associated with the given header key.
+     */
+    public void setHeaderValue(String key, String value) {
+        this.header.setValue(key, value);
+    }
+
+    /**
      * Writes the entire response to an output stream. The output will include the HTTP response data, the header,
      * and the entire contents of the response's body.
      *

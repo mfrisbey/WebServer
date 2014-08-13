@@ -16,7 +16,9 @@
 
 package com.frisbey.webserver;
 
+import com.frisbey.webserver.exception.InvalidMethodException;
 import com.frisbey.webserver.exception.InvalidRequestException;
+import com.frisbey.webserver.request.WebServerHeader;
 import com.frisbey.webserver.request.WebServerRequest;
 import com.frisbey.webserver.request.WebServerRequestFactory;
 import com.frisbey.webserver.response.WebServerResponse;
@@ -73,18 +75,30 @@ public class RequestThread implements Runnable {
         logger.debug("entering");
         WebServerResponse response = null;
         try {
-            // grab streams from the socket
-            InputStream input = clientSocket.getInputStream();
             OutputStream output = clientSocket.getOutputStream();
 
-            // interpret the request and generate a response
-            WebServerRequest request = getRequest(input, this.webServerRoot);
-            response = request.getResponse();
+            try {
+                // grab streams from the socket
+                InputStream input = clientSocket.getInputStream();
+
+                // interpret the request and generate a response
+                WebServerRequest request = getRequest(input, this.webServerRoot);
+                response = request.getResponse();
+            } catch (InvalidMethodException ex) {
+                logger.info("server provided invalid method exception", ex);
+                response = new WebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.NotImplemented, new WebServerHeader());
+            } catch (InvalidRequestException ex) {
+                logger.info("server provided invalid request exception", ex);
+                response = new WebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.BadRequest, new WebServerHeader());
+            } catch (Exception ex) {
+                logger.error("There was an unhandled exception while processing the request and an internal server error response is being sent.", ex);
+                response = new WebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.InternalServerError, new WebServerHeader());
+            }
 
             // write the response back to the socket
             response.writeResponse(output);
         } catch (Exception ex) {
-            logger.error("exception when processing request", ex);
+            logger.error("something went very wrong and the server was unable to provide a response to the client", ex);
         } finally {
             // close the socket when finished
             try {
@@ -105,7 +119,7 @@ public class RequestThread implements Runnable {
      * @throws IOException thrown if there are issues reading from the input stream.
      * @throws InvalidRequestException thrown if the raw request in the input stream is invalid.
      */
-    protected WebServerRequest getRequest(InputStream input, String webServerRoot) throws IOException, InvalidRequestException {
+    protected WebServerRequest getRequest(InputStream input, String webServerRoot) throws IOException, InvalidRequestException, InvalidMethodException {
         return WebServerRequestFactory.getRequest(input, webServerRoot);
     }
 }

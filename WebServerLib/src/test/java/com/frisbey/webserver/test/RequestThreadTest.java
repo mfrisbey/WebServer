@@ -77,7 +77,8 @@ public class RequestThreadTest {
      * Ensures that call fails as expected when an exception is thrown.
      */
     @Test
-    public void callTestException() throws Exception {
+    @SuppressWarnings("unchecked")
+    public void callExceptionTest() throws Exception {
         Mockito.when(mockSocket.getInputStream()).thenThrow(IOException.class);
 
         RequestThread thread = new MockRequestThread(mockSocket, "/webserverroot");
@@ -88,5 +89,41 @@ public class RequestThreadTest {
             // ensure that socket was closed even with exception
             Mockito.verify(mockSocket).close();
         }
+    }
+
+    /**
+     * Verifies that the invalid method response is retrieved as expected.
+     */
+    @Test
+    public void callInvalidMethodTest() throws Exception {
+        InputStream input = StreamUtils.getInputStreamFromString("PUT /someuri HTTP/1.1");
+        OutputStream output = new ByteArrayOutputStream();
+
+        Mockito.when(mockSocket.getInputStream()).thenReturn(input);
+        Mockito.when(mockSocket.getOutputStream()).thenReturn(output);
+
+        RequestThread thread = new RequestThread(mockSocket, "/webserverroot");
+        thread.run();
+
+        // ensure the socket was closed as expected
+        assertEquals("Unexpected invalid method response", "HTTP/1.1 501 Not Implemented\r\nContent-Length: 0\r\nConnection: close\r\nServer: AemWebServer\r\n\r\n", output.toString());
+    }
+
+    /**
+     * Verifies that the invalid request response is retrieved as expected.
+     */
+    @Test
+    public void callInvalidRequestTest() throws Exception {
+        InputStream input = StreamUtils.getInputStreamFromString("TOTALLY INVALID");
+        OutputStream output = new ByteArrayOutputStream();
+
+        Mockito.when(mockSocket.getInputStream()).thenReturn(input);
+        Mockito.when(mockSocket.getOutputStream()).thenReturn(output);
+
+        RequestThread thread = new RequestThread(mockSocket, "/webserverroot");
+        thread.run();
+
+        // ensure the socket was closed as expected
+        assertEquals("Unexpected invalid method response", "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\nConnection: close\r\nServer: AemWebServer\r\n\r\n", output.toString());
     }
 }

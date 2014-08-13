@@ -63,17 +63,20 @@ public class HeadRequest extends WebServerRequest {
     public WebServerResponse getResponse() throws InvalidRequestException {
         logger.debug("entering");
 
-        WebServerHeader header = new WebServerHeader();
-        header.setValue("Connection", "close");
-        header.setValue("Server", "AemWebServer");
-        header.setValue("Content-Length", Long.toString(getContentLength()));
-        header.setValue("Content-Type", HttpContentType.fromFilePath(this.getUri()).getContentType());
-
         HttpResponse response = getHttpResponse();
+
+        WebServerHeader header = new WebServerHeader();
+
+        WebServerResponse serverResponse = createResponse(HttpVersion.HTTP_1_1, response, header);
+
+        if (response == HttpResponse.OK) {
+            serverResponse.setHeaderValue("Content-Length", Long.toString(getContentLength()));
+            serverResponse.setHeaderValue("Content-Type", HttpContentType.fromFilePath(this.getUri()).getContentType());
+        }
 
         logger.debug("returning response with status {}", response.getText());
 
-        return createResponse(HttpVersion.HTTP_1_1, response, header);
+        return serverResponse;
     }
 
     /**
@@ -85,7 +88,7 @@ public class HeadRequest extends WebServerRequest {
      * @return An initialized WebServerResponse instance.
      */
     protected WebServerResponse createResponse(HttpVersion version, HttpResponse response, WebServerHeader header) {
-        return new WebServerResponse(HttpVersion.HTTP_1_1, response, header);
+        return new WebServerResponse(version, response, header);
     }
 
     /**

@@ -70,4 +70,21 @@ public class StringUtils {
 
         return finalPath.toString();
     }
+
+    /**
+     * Strips the query string portion of a uri from the string. For example, if the uri is "/file.html?id=10" then the
+     * result of the method call will be "/file.html".
+     *
+     * @param uri The URI whose query string should be trimmed.
+     * @return A query-string free version of the URI.
+     */
+    public static String trimQueryString(String uri) {
+        int queryStart = uri.indexOf("?");
+
+        if (queryStart >= 0) {
+            uri = uri.substring(0, queryStart);
+        }
+
+        return uri;
+    }
 }

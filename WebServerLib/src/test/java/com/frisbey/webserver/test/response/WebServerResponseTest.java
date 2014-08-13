@@ -68,6 +68,22 @@ public class WebServerResponseTest {
     }
 
     /**
+     * Verifies the setHeaderValue method
+     */
+    @Test
+    public void setHeaderValueTest() {
+        WebServerHeader header = new WebServerHeader();
+        header.setValue("Host", "www.adobe.com");
+
+        WebServerResponse response = new WebServerResponse(HttpVersion.HTTP_1_1, HttpResponse.OK, header);
+        response.setHeaderValue("Host", "www.adobe.com2");
+        response.setHeaderValue("Content-Type", "pdf");
+
+        assertEquals("Unexpected host header value", "www.adobe.com2", response.getHeaderValue("Host"));
+        assertEquals("Unexpected content type header value", "pdf", response.getHeaderValue("Content-Type"));
+    }
+
+    /**
      * Verifies that the writeResponse method functions correctly when provided with valid information.
      */
     @Test
@@ -82,7 +98,7 @@ public class WebServerResponseTest {
         response.writeResponse(output);
 
         String finalOutput = output.toString();
-        assertEquals("Unexpected response output", "HTTP/1.1 200 OK\r\nHost: www.adobe.com\r\n\r\nthis is the body", finalOutput);
+        assertEquals("Unexpected response output", "HTTP/1.1 200 OK\r\nHost: www.adobe.com\r\nContent-Length: 0\r\nConnection: close\r\nServer: AemWebServer\r\n\r\nthis is the body", finalOutput);
     }
 
     /**
@@ -115,7 +131,7 @@ public class WebServerResponseTest {
         response.writeResponse(output);
 
         String finalOutput = output.toString();
-        assertEquals("Unexpected response output", "HTTP/1.1 200 OK\r\nHost: www.adobe.com\r\n\r\n", finalOutput);
+        assertEquals("Unexpected response output", "HTTP/1.1 200 OK\r\nHost: www.adobe.com\r\nContent-Length: 0\r\nConnection: close\r\nServer: AemWebServer\r\n\r\n", finalOutput);
     }
 
     /**

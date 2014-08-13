@@ -17,6 +17,7 @@
 package com.frisbey.webserver.request;
 
 import com.frisbey.webserver.HttpMethod;
+import com.frisbey.webserver.HttpResponse;
 import com.frisbey.webserver.HttpVersion;
 import com.frisbey.webserver.exception.InvalidRequestException;
 import com.frisbey.webserver.response.WebServerResponse;

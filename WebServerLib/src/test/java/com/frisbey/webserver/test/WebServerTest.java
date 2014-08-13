@@ -42,6 +42,7 @@ import static org.junit.Assert.*;
  *
  * @author Mark Frisbey
  */
+@SuppressWarnings("unchecked")
 public class WebServerTest {
 
     // mocks the thread pool

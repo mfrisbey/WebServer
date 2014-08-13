@@ -94,7 +94,7 @@ public class WebServerHeaderTest {
 
         assertTrue("Host key not found", hasHost);
         assertTrue("Keep alive key not found", hasKeepAlive);
-        assertEquals("Unexpected number of keys", 2, keyCount);
+        assertEquals("Unexpected number of keys", 5, keyCount);
     }
 
     /**

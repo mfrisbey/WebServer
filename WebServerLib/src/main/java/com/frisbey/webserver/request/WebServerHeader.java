@@ -46,6 +46,9 @@ public class WebServerHeader {
      */
     public WebServerHeader() {
         rawValues = new HashMap<String, String>();
+        rawValues.put("Connection", "close");
+        rawValues.put("Content-Length", "0");
+        rawValues.put("Server", "AemWebServer");
     }
 
     /**
